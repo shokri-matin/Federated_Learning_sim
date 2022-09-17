@@ -5,6 +5,8 @@ import numpy as np
 from tensorflow import keras
 import generate_parties
 
+from os import path
+
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
 from get_train_test_data import generate_train_test_data, load_data_for_transfer_model
@@ -91,7 +93,6 @@ def run(argv):
             y_pred = model_head.predict(x_test_transfer_predicted)
             y_pred = np.argmax(y_pred, axis=1)
 
-            print("it : {}".format(it))
             test_acc[it, epoch] = accuracy_score(y_test_transfer, y_pred)
             test_pre[it, epoch] = precision_score(y_test_transfer, y_pred)
             test_re[it, epoch] = recall_score(y_test_transfer, y_pred)
@@ -102,10 +103,20 @@ def run(argv):
             print('precision_score: ', precision_score(y_test_transfer, y_pred))
             print('f1_score: ', f1_score(y_test_transfer, y_pred))
     
-    print("Final Accuracy: ", np.mean(test_acc, axis=0))
-    print("Final Precision: ", np.mean(test_pre, axis=0))
-    print("Final Recall: ", np.mean(test_re, axis=0))
-    print("Final F1: ", np.mean(test_f1, axis=0))
+    mean_test_acc = np.mean(test_acc, axis=0)
+    mean_test_pre = np.mean(test_pre, axis=0)
+    mean_test_re = np.mean(test_re, axis=0)
+    mean_test_f1 = np.mean(test_f1, axis=0)
+
+    print("Final Accuracy: ", mean_test_acc)
+    print("Final Precision: ", mean_test_pre)
+    print("Final Recall: ", mean_test_re)
+    print("Final F1: ", mean_test_f1)
+
+    np.save("Results/mean_test_acc_{}".format(iteration), mean_test_acc)
+    np.save("Results/mean_test_pre_{}".format(iteration), mean_test_pre)
+    np.save("Results/mean_test_re_{}".format(iteration), mean_test_re)
+    np.save("Results/mean_test_f1_{}".format(iteration), mean_test_f1)
 
 if __name__  == "__main__":
     run(sys.argv)
