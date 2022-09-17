@@ -47,7 +47,7 @@ def run(argv):
                 metrics=['accuracy'],
             )
 
-        model_base = keras.models.load_model("model_base/model_base_{}.h5".format(it))
+        model_base = keras.models.load_model("model_base/{}/model_base.h5".format(it))
 
         print("6-preparing model for transfer learning")
 

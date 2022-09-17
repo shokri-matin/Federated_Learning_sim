@@ -29,7 +29,7 @@ class Party:
 
     def predict_with_model_base(self):
 
-        model_base = keras.models.load_model("model_base/model_base_{}.h5".format(self.iteration))
+        model_base = keras.models.load_model("model_base/{}/model_base.h5".format(self.iteration))
         self.data = model_base.predict(self.data_raw)
 
     def define_model(self):

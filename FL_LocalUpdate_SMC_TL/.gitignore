@@ -3,5 +3,5 @@
 /test_train_data/y*
 /__pycache__
 /.vscode
-/model_base/model*
+/model_base/*
 
