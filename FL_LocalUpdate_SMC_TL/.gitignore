@@ -1,5 +1,7 @@
-/dataset
-/test_train_data
+/dataset/chb*
+/test_train_data/x*
+/test_train_data/y*
 /__pycache__
 /.vscode
-/model_base
+/model_base/model*
+

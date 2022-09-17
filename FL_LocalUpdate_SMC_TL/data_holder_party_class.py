@@ -1,4 +1,5 @@
 # imports
+from email import iterators
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
@@ -8,9 +9,10 @@ import os
 
 class Party:
 
-    def __init__(self, data, data_labels, tf_seed, num_local_updates, num_parties, party_id, scenario):
+    def __init__(self, data, data_labels, tf_seed, num_local_updates, num_parties, party_id, scenario, iteration):
         self.data_raw = data
         self.data = None
+        self.iteration = iteration
         self.predict_with_model_base()
         self.data_labels = data_labels
         # Instantiate a loss function.
@@ -19,37 +21,21 @@ class Party:
         self.num_local_updates = num_local_updates
         self.tf_seed = tf_seed
         self.model = self.define_model()
-        self.SMC_tools = SMC_functions.SMCtools(num_parties=num_parties, party_id=party_id,
-                                                num_participating_parties=num_parties,
-                                                secure_aggregation_parameter_k=num_parties - 1,
-                                                scenario=scenario)
+        
+        # self.SMC_tools = SMC_functions.SMCtools(num_parties=num_parties, party_id=party_id,
+        #                                         num_participating_parties=num_parties,
+        #                                         secure_aggregation_parameter_k=num_parties - 1,
+        #                                         scenario=scenario)
 
     def predict_with_model_base(self):
 
-        model_base = keras.models.load_model("model_base/model_base.h5")
-        # model_base = keras.Sequential([
-        #     # base
-        #     layers.Conv2D(32, (3, 3), padding='same', activation='relu', kernel_initializer='he_uniform',
-        #                   input_shape=(28, 28, 1)),
-        #     layers.MaxPooling2D((2, 2)),
-        # ])
-        # checkpoint_path = "model_base/cp-{epoch:04d}.ckpt"
-        # checkpoint_dir = os.path.dirname(checkpoint_path)
-
-        # latest = tf.train.latest_checkpoint(checkpoint_dir)
-        # model_base.load_weights(latest)
-
+        model_base = keras.models.load_model("model_base/model_base_{}.h5".format(self.iteration))
         self.data = model_base.predict(self.data_raw)
 
     def define_model(self):
         """ This function generates the NN model"""
 
-        # def my_init(shape, dtype=None):
-        #     return tf.keras.backend.random_normal(shape, dtype=dtype, seed=self.tf_seed)
-        # initializer = tf.keras.initializers.GlorotUniform(seed=self.tf_seed)
-        # initializer = tf.keras.initializers.Zeros()
-
-        model_head = tf.keras.models.Sequential([tf.keras.layers.Dense(32, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
+        model_head = tf.keras.models.Sequential([tf.keras.layers.Dense(16, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
                         tf.keras.layers.BatchNormalization(),
                         tf.keras.layers.Activation('relu'),
                         tf.keras.layers.Dropout(0.3),
@@ -95,9 +81,11 @@ class Party:
         # locally update the model
         self.locally_update_model()
         model_parameters = self.locally_update_model()
+        
         # mask updated model parameters
-        masked_model_parameters = self.SMC_tools.mask(model_parameters)
+        # masked_model_parameters = self.SMC_tools.mask(model_parameters)
         # share masked updated model parameters
+        masked_model_parameters = model_parameters
         return masked_model_parameters
 
 

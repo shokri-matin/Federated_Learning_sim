@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-def get_all_model(head_size = 32):
+def get_all_model(head_size = 16):
 
     model_base = tf.keras.models.Sequential([
                 tf.keras.layers.Conv1D(512, kernel_size= 2, strides=2,),#activation=tf.nn.relu
@@ -18,7 +18,9 @@ def get_all_model(head_size = 32):
                 tf.keras.layers.Dropout(0.3), 
                 tf.keras.layers.Flatten()                      
                 ])
-    model_head = tf.keras.models.Sequential([tf.keras.layers.Dense(head_size, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
+    model_head = tf.keras.models.Sequential([
+        tf.keras.layers.InputLayer(input_shape=[8192]),
+        tf.keras.layers.Dense(head_size, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
                 tf.keras.layers.BatchNormalization(),
                 tf.keras.layers.Activation('relu'),
                 tf.keras.layers.Dropout(0.3),
