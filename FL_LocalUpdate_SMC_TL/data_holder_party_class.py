@@ -35,7 +35,7 @@ class Party:
     def define_model(self):
         """ This function generates the NN model"""
 
-        model_head = tf.keras.models.Sequential([tf.keras.layers.Dense(16, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
+        model_head = tf.keras.models.Sequential([tf.keras.layers.Dense(8, kernel_regularizer=tf.keras.regularizers.L1(0.001)),
                         tf.keras.layers.BatchNormalization(),
                         tf.keras.layers.Activation('relu'),
                         tf.keras.layers.Dropout(0.3),

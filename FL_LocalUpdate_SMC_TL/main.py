@@ -41,7 +41,7 @@ def run(argv):
 
         # train the all model
         print("3-load all model")
-        model_base, model_head = get_all_model(head_size=16)
+        model_base, model_head = get_all_model(head_size=8)
 
         model_head.compile(
                 optimizer='adam',
@@ -58,7 +58,7 @@ def run(argv):
         data_holder_parties_all = generate_parties.generate_parties(num_data_holder_parties=num_data_holder_parties,
                                                                     tf_seed=tf_seed,
                                                                     num_local_updates=num_local_updates,
-                                                                    scenario=scenario,
+                                                                     scenario=scenario,
                                                                     iteration=it)
 
         print("8-generate/instantiate mediator")
