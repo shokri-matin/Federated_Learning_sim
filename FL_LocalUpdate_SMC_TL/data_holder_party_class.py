@@ -75,7 +75,7 @@ class Party:
 
             for j in range(num_batches):
                 # calculate gradients
-                self.calculate_gradients(self.data[chunk_indices[i]], self.data_labels[chunk_indices[i]])
+                self.calculate_gradients(self.data[chunk_indices[j]], self.data_labels[chunk_indices[j]])
                 # update model based on calculated grads
                 self.model.optimizer.apply_gradients(zip(self.grads, self.model.trainable_weights))
 
