@@ -6,6 +6,8 @@ from tensorflow.keras.layers.experimental import preprocessing
 import tensorflow as tf
 import SMC_functions
 import os
+from sklearn.utils import shuffle
+import numpy as np
 
 class Party:
 
@@ -63,10 +65,19 @@ class Party:
          and returns the updated parameters """
 
         for i in range(0, self.num_local_updates):
-            # calculate gradients
-            self.calculate_gradients(self.data, self.data_labels)
-            # update model based on calculated grads
-            self.model.optimizer.apply_gradients(zip(self.grads, self.model.trainable_weights))
+
+            train_data_record_indices = range(0, self.data.shape[0])
+            train_data_record_indices_shuffled = shuffle(train_data_record_indices, random_state=0)
+
+            batch_size = 16
+            num_batches = int(self.data.shape[0]/batch_size)
+            chunk_indices = np.array_split(train_data_record_indices_shuffled, num_batches)
+
+            for i in range(num_batches):
+                # calculate gradients
+                self.calculate_gradients(self.data[chunk_indices[i]], self.data_labels[chunk_indices[i]])
+                # update model based on calculated grads
+                self.model.optimizer.apply_gradients(zip(self.grads, self.model.trainable_weights))
 
         # return locally updated model parameters
         return self.model.get_weights()
