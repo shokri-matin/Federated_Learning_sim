@@ -67,13 +67,13 @@ class Party:
         for i in range(0, self.num_local_updates):
 
             train_data_record_indices = range(0, self.data.shape[0])
-            train_data_record_indices_shuffled = shuffle(train_data_record_indices, random_state=0)
+            train_data_record_indices_shuffled = shuffle(train_data_record_indices)  # , random_state=0
 
             batch_size = 16
             num_batches = int(self.data.shape[0]/batch_size)
             chunk_indices = np.array_split(train_data_record_indices_shuffled, num_batches)
 
-            for j in range(num_batches):
+            for j in range(1):  # range(num_batches)
                 # calculate gradients
                 self.calculate_gradients(self.data[chunk_indices[j]], self.data_labels[chunk_indices[j]])
                 # update model based on calculated grads
