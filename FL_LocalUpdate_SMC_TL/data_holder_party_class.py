@@ -67,7 +67,7 @@ class Party:
         for i in range(0, self.num_local_updates):
 
             train_data_record_indices = range(0, self.data.shape[0])
-            train_data_record_indices_shuffled = shuffle(train_data_record_indices)  # , random_state=0
+            train_data_record_indices_shuffled = shuffle(train_data_record_indices)  
 
             batch_size = 16
             num_batches = int(self.data.shape[0]/batch_size)
